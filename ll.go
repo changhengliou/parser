@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"parser/trie"
 	"strings"
 )
 
@@ -84,6 +85,10 @@ func (p *parser) initSymbols(str string) {
 	}
 }
 
+// R -> A + B C | A + B X | C X | C
+// R -> A + B W | C Z
+// W -> C | X
+// Z -> X | ε
 func (p *parser) leftFactor() {
 	for key, symGrps := range p.symMap {
 		// find common prefix

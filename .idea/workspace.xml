@@ -1,51 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3853e040-c1d4-49c5-bd4c-cf2396dd4895" name="Default Changelist" comment="" />
+    <list default="true" id="4f75e886-44fd-40a2-a156-ff74d7db6ef0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/common.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/radixtree/radixtree_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ll.go" beforeDir="false" afterPath="$PROJECT_DIR$/ll.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ll_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/ll_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trie/trie.go" beforeDir="false" afterPath="$PROJECT_DIR$/trie/trie.go" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="isMigrated" value="true" />
+  </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ll.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="733">
-              <caret line="148" column="39" selection-start-line="148" selection-end-line="149" />
-              <folding>
-                <element signature="e#14#42#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/trie/trie.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="399">
-              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ll_test.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="33" column="34" selection-start-line="33" selection-start-column="34" selection-end-line="33" selection-end-column="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/recursive_descent/recursive_descent.go">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/trie/trie.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="5">
+                  <caret line="336" column="6" selection-start-line="336" selection-start-column="6" selection-end-line="336" selection-end-column="6" />
+                  <folding>
+                    <element signature="e#14#43#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/radixtree/radixtree.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="404">
+                  <caret line="122" column="22" selection-start-line="122" selection-start-column="22" selection-end-line="122" selection-end-column="22" />
+                  <folding>
+                    <element signature="e#19#55#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/trie/trie.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="646">
+                  <caret line="556" selection-start-line="556" selection-end-line="556" />
+                  <folding>
+                    <element signature="e#14#43#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/radixtree/radixtree_test.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="492">
+                  <caret line="56" selection-start-line="56" selection-end-line="56" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -54,21 +85,35 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" path="/usr/local/Cellar/go/1.11/libexec" />
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>longest</find>
+      <find>edges</find>
+    </findStrings>
+  </component>
+  <component name="GOROOT" path="/usr/local/Cellar/go/1.12.4/libexec" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/recursive_descent/recursive_descent.go" />
-        <option value="$PROJECT_DIR$/ll_test.go" />
         <option value="$PROJECT_DIR$/ll.go" />
+        <option value="$PROJECT_DIR$/common/common.go" />
+        <option value="$PROJECT_DIR$/ll_test.go" />
+        <option value="$PROJECT_DIR$/radixtree/radixtree_test.go" />
         <option value="$PROJECT_DIR$/trie/trie.go" />
+        <option value="$PROJECT_DIR$/radixtree/radixtree.go" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="877" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="413" />
+    <option name="width" value="1680" />
+    <option name="height" value="1027" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -82,31 +127,36 @@
               <item name="parser" type="b2602c69:ProjectViewProjectNode" />
               <item name="parser" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="parser" type="462c0819:PsiDirectoryNode" />
+              <item name="radixtree" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1564311025093" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
+    <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
-    <property name="jdk.selected.JAVA_MODULE" value="1.8" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
-  </component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/recursive_descent" />
-    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -120,21 +170,47 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
-    <configuration name="TestInitSymbols in parser" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Build.go build trie.go">
+    <configuration name="go build trie.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="parser" />
       <working_directory value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/trie/trie.go" />
       <package value="parser" />
       <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestInitSymbols$" />
       <method v="2" />
     </configuration>
+    <configuration name="TestAddChild_2 in parser/radixtree" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="parser" />
+      <working_directory value="$PROJECT_DIR$/radixtree" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="parser/radixtree" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestAddChild_2$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go test parser/radixtree" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="parser" />
+      <working_directory value="$PROJECT_DIR$/radixtree" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="parser/radixtree" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go Build.go build trie.go" />
+      <item itemvalue="Go Test.go test parser/radixtree" />
+      <item itemvalue="Go Test.TestAddChild_2 in parser/radixtree" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestInitSymbols in parser" />
+        <item itemvalue="Go Build.go build trie.go" />
+        <item itemvalue="Go Test.go test parser/radixtree" />
+        <item itemvalue="Go Test.TestAddChild_2 in parser/radixtree" />
       </list>
     </recent_temporary>
   </component>
@@ -143,52 +219,52 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="3853e040-c1d4-49c5-bd4c-cf2396dd4895" name="Default Changelist" comment="" />
-      <created>1564287390264</created>
+      <changelist id="4f75e886-44fd-40a2-a156-ff74d7db6ef0" name="Default Changelist" comment="" />
+      <created>1564366931695</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1564287390264</updated>
-      <workItem from="1564287391464" duration="5597000" />
+      <updated>1564366931695</updated>
+      <workItem from="1564366932889" duration="19637000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="TestInitSymbols_in_parser - 2019.07.28 at 13h 05m 24s.xml">
-      <configuration name="TestInitSymbols in parser" configurationId="GoTestRunConfiguration" />
+    <history-entry file="go_test_parser_radixtree - 2019.07.31 at 17h 00m 06s.xml">
+      <configuration name="go test parser/radixtree" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestInitSymbols_in_parser - 2019.07.28 at 13h 08m 51s.xml">
-      <configuration name="TestInitSymbols in parser" configurationId="GoTestRunConfiguration" />
+    <history-entry file="go_test_parser_radixtree - 2019.07.31 at 17h 00m 45s.xml">
+      <configuration name="go test parser/radixtree" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestInitSymbols_in_parser - 2019.07.28 at 13h 11m 59s.xml">
-      <configuration name="TestInitSymbols in parser" configurationId="GoTestRunConfiguration" />
+    <history-entry file="go_test_parser_radixtree - 2019.07.31 at 17h 04m 04s.xml">
+      <configuration name="go test parser/radixtree" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestInitSymbols_in_parser - 2019.07.28 at 13h 12m 08s.xml">
-      <configuration name="TestInitSymbols in parser" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestAddChild_2_in_parser_radixtree - 2019.07.31 at 17h 05m 12s.xml">
+      <configuration name="TestAddChild_2 in parser/radixtree" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestInitSymbols_in_parser - 2019.07.28 at 13h 13m 20s.xml">
-      <configuration name="TestInitSymbols in parser" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestAddChild_2_in_parser_radixtree - 2019.07.31 at 17h 06m 40s.xml">
+      <configuration name="TestAddChild_2 in parser/radixtree" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestInitSymbols_in_parser - 2019.07.28 at 13h 16m 45s.xml">
-      <configuration name="TestInitSymbols in parser" configurationId="GoTestRunConfiguration" />
+    <history-entry file="go_test_parser_radixtree - 2019.07.31 at 17h 06m 45s.xml">
+      <configuration name="go test parser/radixtree" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestInitSymbols_in_parser - 2019.07.28 at 13h 17m 11s.xml">
-      <configuration name="TestInitSymbols in parser" configurationId="GoTestRunConfiguration" />
+    <history-entry file="go_test_parser_radixtree - 2019.07.31 at 17h 08m 11s.xml">
+      <configuration name="go test parser/radixtree" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestInitSymbols_in_parser - 2019.07.28 at 13h 17m 26s.xml">
-      <configuration name="TestInitSymbols in parser" configurationId="GoTestRunConfiguration" />
+    <history-entry file="go_test_parser_radixtree - 2019.07.31 at 17h 08m 28s.xml">
+      <configuration name="go test parser/radixtree" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestInitSymbols_in_parser - 2019.07.28 at 13h 17m 42s.xml">
-      <configuration name="TestInitSymbols in parser" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestAddChild_2_in_parser_radixtree - 2019.07.31 at 17h 09m 28s.xml">
+      <configuration name="TestAddChild_2 in parser/radixtree" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestInitSymbols_in_parser - 2019.07.28 at 13h 19m 20s.xml">
-      <configuration name="TestInitSymbols in parser" configurationId="GoTestRunConfiguration" />
+    <history-entry file="go_test_parser_radixtree - 2019.07.31 at 17h 12m 12s.xml">
+      <configuration name="go test parser/radixtree" configurationId="GoTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5597000" />
+    <option name="totallyTimeSpent" value="19637000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="877" extended-state="0" />
+    <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Image Layers" />
@@ -196,8 +272,9 @@
       <window_info id="UI Designer" />
       <window_info id="Capture Tool" />
       <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24964234" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.21306472" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" />
       <window_info anchor="bottom" id="Version Control" />
@@ -205,7 +282,7 @@
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3299363" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32941177" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -216,7 +293,7 @@
       <window_info anchor="right" id="Capture Analysis" />
       <window_info anchor="right" id="Palette&#9;" />
       <window_info anchor="right" id="Database" />
-      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
@@ -227,38 +304,101 @@
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/trie/trie.go</url>
+          <line>153</line>
+          <properties />
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/recursive_descent/recursive_descent.go">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file:///usr/local/Cellar/go/1.11/libexec/src/strings/strings.go">
+    <entry file="file:///usr/local/Cellar/go/1.12.4/libexec/src/sort/search.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="790" column="5" selection-start-line="790" selection-start-column="5" selection-end-line="790" selection-end-column="5" />
+        <state relative-caret-position="171">
+          <caret line="72" selection-start-line="72" selection-end-line="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/go/1.12.4/libexec/src/builtin/builtin.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/go/1.12.4/libexec/src/unicode/utf8/utf8.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-191">
+          <caret line="190" column="26" selection-start-line="190" selection-start-column="3" selection-end-line="190" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/go/1.12.4/libexec/src/sort/sort.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="215" column="5" selection-start-line="215" selection-start-column="5" selection-end-line="215" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ll_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="33" column="34" selection-start-line="33" selection-start-column="34" selection-end-line="33" selection-end-column="34" />
+        <state relative-caret-position="616">
+          <caret line="28" column="15" lean-forward="true" selection-start-line="28" selection-start-column="15" selection-end-line="28" selection-end-column="15" />
+          <folding>
+            <element signature="e#14#52#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/common.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ll.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="733">
-          <caret line="148" column="39" selection-start-line="148" selection-end-line="149" />
+        <state relative-caret-position="44">
+          <caret line="2" column="7" lean-forward="true" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
           <folding>
             <element signature="e#14#42#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/go.mod">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/radixtree/radixtree_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="492">
+          <caret line="56" selection-start-line="56" selection-end-line="56" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/trie/trie.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+        <state relative-caret-position="5">
+          <caret line="336" column="6" selection-start-line="336" selection-start-column="6" selection-end-line="336" selection-end-column="6" />
+          <folding>
+            <element signature="e#14#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/radixtree/radixtree.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="404">
+          <caret line="122" column="22" selection-start-line="122" selection-start-column="22" selection-end-line="122" selection-end-column="22" />
+          <folding>
+            <element signature="e#19#55#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
