@@ -1,19 +1,18 @@
 package main
 
-import "testing"
+import (
+	"parser/common"
+	"testing"
+)
 
 var t *testing.T
 
-func assert(expect interface{}, actual interface{}) {
-	if expect != actual {
-		t.Errorf("Expect: %v, Actual: %v", expect, actual)
-	}
-}
+
 
 func TestInitSymbols(t *testing.T) {
 	p := New()
 
-	p.initSymbols("T -> int Y | (E)")
+	p.initSymbols("T -> int Y | (E)", nil)
 
 	if len(p.symMap) != 1 || p.symMap["T"] == nil {
 		t.Error("Expect to have 1 key T")
@@ -30,7 +29,7 @@ func TestInitSymbols(t *testing.T) {
 		t.Error("Expect to have 1 symbols in group 1")
 	}
 
-	assert("int", symGrps[0][0].str())
-	assert("Y", symGrps[0][1].str())
-	assert("(E)", symGrps[1][0].str())
+	common.Assert("int", symGrps[0][0])
+	common.Assert("Y", symGrps[0][1])
+	common.Assert("(E)", symGrps[1][0])
 }
