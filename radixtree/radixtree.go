@@ -2,6 +2,7 @@ package radixtree
 
 import (
   "sort"
+  "strings"
   "unicode/utf8"
 )
 
@@ -61,6 +62,10 @@ func (t *Node) addChild(n *Node) {
   if index <= childCount {
     t.children = append(t.children[:index], append([]*Node{n}, t.children[index:]...)...)
   }
+}
+
+func (t *Node) removeChild(n *Node) {
+
 }
 
 func New() *Tree {
@@ -135,4 +140,66 @@ func longestPrefix(a string, b string) int {
     }
   }
   return i
+}
+
+func (t *Tree) Remove(s string) bool {
+  var (
+    parent = t.root
+    curr   *Node
+    search = s
+  )
+
+  for {
+    if len(search) == 0 {
+      if !curr.term {
+        return false
+      }
+      break
+    }
+    parent = curr
+    curr = curr.findNode(parent.data.firstChar())
+    if curr == nil {
+      return false
+    }
+
+    if strings.HasPrefix(search, curr.data.str()) {
+      search = search[len(curr.data):]
+      continue
+    }
+    return false
+  }
+  curr.term = false
+  if len(curr.children) == 0 {
+    parent.removeChild(curr)
+  }
+
+  // merge nodes
+  if len(curr.children) == 1 {
+    parent.data += parent.children[0].data
+    parent.removeChild(parent.children[0])
+    parent.term = true
+  }
+  // check if we should merge the parent's other child
+  return true
+}
+
+func (t *Tree) RemovePrefix(s string) {
+  t.removePrefix(nil, t.root, s)
+}
+
+func (t *Tree) removePrefix(parent, child *Node, prefix string) {
+  if len(prefix) == 0 {
+    child.children = Nodes{}
+  }
+
+  curr := child.findNode(child.data.firstChar())
+  if curr == nil {
+    return
+  }
+  if len(curr.data) > len(prefix) {
+    prefix = prefix[len(prefix):]
+  } else {
+    prefix = prefix[len(child.data):]
+  }
+  t.removePrefix(child, curr, prefix)
 }

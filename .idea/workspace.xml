@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4f75e886-44fd-40a2-a156-ff74d7db6ef0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/common.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/radixtree/radixtree_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ll.go" beforeDir="false" afterPath="$PROJECT_DIR$/ll.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ll_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/ll_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/radixtree/radixtree.go" beforeDir="false" afterPath="$PROJECT_DIR$/radixtree/radixtree.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/radixtree/radixtree_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/radixtree/radixtree_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/trie/trie.go" beforeDir="false" afterPath="$PROJECT_DIR$/trie/trie.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,8 +34,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/radixtree/radixtree.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="404">
-                  <caret line="122" column="22" selection-start-line="122" selection-start-column="22" selection-end-line="122" selection-end-column="22" />
+                <state relative-caret-position="360">
+                  <caret line="125" column="23" lean-forward="true" selection-start-line="125" selection-start-column="23" selection-end-line="125" selection-end-column="23" />
                   <folding>
                     <element signature="e#19#55#0" expanded="true" />
                   </folding>
@@ -53,11 +47,11 @@
       </split-first>
       <split-second>
         <leaf>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/trie/trie.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="646">
-                  <caret line="556" selection-start-line="556" selection-end-line="556" />
+                <state relative-caret-position="-18">
+                  <caret line="14" column="5" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
                   <folding>
                     <element signature="e#14#43#0" expanded="true" />
                   </folding>
@@ -65,11 +59,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/radixtree/radixtree_test.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="492">
-                  <caret line="56" selection-start-line="56" selection-end-line="56" />
+                <state relative-caret-position="800">
+                  <caret line="70" selection-start-line="70" selection-end-line="70" />
                 </state>
               </provider>
             </entry>
@@ -224,7 +218,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1564366931695</updated>
-      <workItem from="1564366932889" duration="19637000" />
+      <workItem from="1564366932889" duration="26912000" />
     </task>
     <servers />
   </component>
@@ -261,7 +255,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19637000" />
+    <option name="totallyTimeSpent" value="26912000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
@@ -309,9 +303,9 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/trie/trie.go</url>
-          <line>153</line>
+          <line>550</line>
           <properties />
-          <option name="timeStamp" value="10" />
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -377,8 +371,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/radixtree/radixtree_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="492">
-          <caret line="56" selection-start-line="56" selection-end-line="56" />
+        <state relative-caret-position="800">
+          <caret line="70" selection-start-line="70" selection-end-line="70" />
         </state>
       </provider>
     </entry>
@@ -394,8 +388,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/radixtree/radixtree.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="404">
-          <caret line="122" column="22" selection-start-line="122" selection-start-column="22" selection-end-line="122" selection-end-column="22" />
+        <state relative-caret-position="360">
+          <caret line="125" column="23" lean-forward="true" selection-start-line="125" selection-start-column="23" selection-end-line="125" selection-end-column="23" />
           <folding>
             <element signature="e#19#55#0" expanded="true" />
           </folding>

@@ -66,3 +66,7 @@ func TestAddChild_2(t *testing.T) {
   common.Assert("ruby", tree.root.children[5].data.str())
   common.Assert("zebra", tree.root.children[6].data.str())
 }
+
+func TestInsert(t *testing.T) {
+
+}
