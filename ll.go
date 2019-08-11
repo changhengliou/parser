@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"parser/common"
 	"strings"
 )
 
@@ -18,32 +19,6 @@ var IS_TERM = func(s string) bool {
 func panicIfErr(err error) {
 	if err != nil {
 		panic(err)
-	}
-}
-
-type set map[string]interface{}
-
-func (s set) add(str string) {
-	s[str] = nil
-}
-func (s set) exist(str string) bool {
-	if _, exists := s[str]; exists {
-		return true
-	}
-	return false
-}
-func (s set) keys() []string {
-	i := 0
-	arr := make([]string, len(s))
-	for k := range s {
-		arr[i] = k
-		i++
-	}
-	return arr
-}
-func (s set) addSet(set2 set) {
-	for _, v := range set2.keys() {
-		s.add(v)
 	}
 }
 
@@ -97,16 +72,16 @@ type parser struct {
 	input       []byte
 	symMap      symbolMap
 	startSymbol string
-	firstSet    map[string]set
-	followSet   map[string]set
+	firstSet    map[string]common.Set
+	followSet   map[string]common.Set
 	currPos     int
 }
 
 func New() *parser {
 	p := &parser{}
 	p.symMap = make(map[string][]symbolGroup)
-	p.firstSet = make(map[string]set)
-	p.followSet = make(map[string]set)
+	p.firstSet = make(map[string]common.Set)
+	p.followSet = make(map[string]common.Set)
 	return p
 }
 
@@ -176,13 +151,13 @@ func (p *parser) buildFirstSet() {
 	p.buildSet(p.firstOf)
 }
 
-func (p *parser) buildSet(builder func(interface{}) set) {
+func (p *parser) buildSet(builder func(interface{}) common.Set) {
 	for key := range p.symMap {
 		builder(symbol(key))
 	}
 }
 
-func (p *parser) firstOf(sym interface{}) set {
+func (p *parser) firstOf(sym interface{}) common.Set {
 	symStr := fmt.Sprintf("%v", sym)
 	// already in the set
 	if val, exists := p.firstSet[symStr]; exists {
@@ -191,13 +166,13 @@ func (p *parser) firstOf(sym interface{}) set {
 	for _, val := range p.symMap[symStr] {
 		currSet := p.firstSet[symStr]
 		if currSet == nil {
-			currSet = set{}
+			currSet = common.Set{}
 		}
 		switch v := val[0].(type) {
 		case term:
-			currSet.add(v.str())
+			currSet.Add(v.str())
 		case nonTerm:
-			currSet.addSet(p.firstOf(v))
+			currSet.AddSet(p.firstOf(v))
 		}
 		p.firstSet[symStr] = currSet
 	}
@@ -214,14 +189,14 @@ func (p *parser) buildFollowSet() {
 	p.buildSet(p.followOf)
 }
 
-func (p *parser) followOf(sym interface{}) set {
+func (p *parser) followOf(sym interface{}) common.Set {
 	symStr := fmt.Sprintf("%v", sym)
 	if val, exists := p.followSet[symStr]; exists {
 		return val
 	}
 
 	if symStr == p.startSymbol {
-		p.followSet[symStr].add("$")
+		p.followSet[symStr].Add("$")
 	}
 	occurrences := findInMap(p.symMap, symStr)
 	for _, val := range occurrences {
@@ -230,20 +205,30 @@ func (p *parser) followOf(sym interface{}) set {
 		// X -> + E | ε
 		// Y -> * T | ε
 		// follow(E) = follow(X)
+		// ------------------------------
+		// follow(E) = { $, ), follow(X) } = { $, ) }
+		// follow(X) = { follow(E) } = { $, ) }
+		// follow(T) = { follow(Y), first(X) } = { follow(Y), +, follow(X) } = { follow(Y), +, $, ) } = { +, $, ) }
+		// follow(Y) = { follow(T) } = { +, $, ) }
+		// follow(() = { first(E) } = { (, int }
+		// follow()) = { follow(T) } = { +, $, ) }
+		// follow(+) = { first(E) } = { (, int }
+		// follow(*) = { first(T) } = { (, int }
+		// follow(int) = { first(Y) } = { *, follow(Y) } = { *, +, $, ) }
 		if val.groupIndex == len(p.symMap[val.key][val.groupsIndex]) - 1 {
-			p.followSet[symStr].addSet(p.followOf(val.key))
+			p.followSet[symStr].AddSet(p.followOf(val.key))
 		} else {
 			currSym := p.symMap[val.key][val.groupsIndex][val.groupIndex+1]
 			currSymStr := fmt.Sprintf("%v", currSym)
 			switch currSym.(type) {
 			case term:
-				p.followSet[symStr].add(currSymStr)
+				p.followSet[symStr].Add(currSymStr)
 			case nonTerm:
 				firstOfSet := p.firstOf(currSymStr)
-				if firstOfSet.exist("ε") {
-					p.followSet[symStr].addSet(p.followOf(currSym))
+				if firstOfSet.Exist("ε") {
+					p.followSet[symStr].AddSet(p.followOf(currSym))
 				}
-				p.followSet[symStr].addSet(firstOfSet)
+				p.followSet[symStr].AddSet(firstOfSet)
 			}
 		}
 	}
@@ -309,9 +294,9 @@ func main() {
 	p.initSymbols("F -> a | ( E )", nil)
 
 	p.buildFirstSet()
-	fmt.Println(p.firstSet["E"].keys())
-	fmt.Println(p.firstSet["T"].keys())
-	fmt.Println(p.firstSet["F"].keys())
-	fmt.Println(p.firstSet["X"].keys())
-	fmt.Println(p.firstSet["Y"].keys())
+	fmt.Println(p.firstSet["E"].Keys())
+	fmt.Println(p.firstSet["T"].Keys())
+	fmt.Println(p.firstSet["F"].Keys())
+	fmt.Println(p.firstSet["X"].Keys())
+	fmt.Println(p.firstSet["Y"].Keys())
 }
