@@ -69,12 +69,12 @@ func (m symbolMap) add(key string, val symbolGroup) {
 }
 
 type parser struct {
-	input       []byte
-	symMap      symbolMap
-	startSymbol string
-	firstSet    map[string]common.Set
-	followSet   map[string]common.Set
-	currPos     int
+	input     []byte
+	symMap    symbolMap
+	nonTerms  []string
+	firstSet  map[string]common.Set
+	followSet map[string]common.Set
+	currPos   int
 }
 
 func New() *parser {
@@ -95,6 +95,7 @@ func (p *parser) initSymbols(str string, isTerm func(s string) bool) {
 	}
 
 	key := strings.Trim(strMap[0], " ")
+	p.nonTerms = append(p.nonTerms, key)
 
 	strGrps := strings.Split(strMap[1], "|")
 	for _, grp := range strGrps {
@@ -152,8 +153,8 @@ func (p *parser) buildFirstSet() {
 }
 
 func (p *parser) buildSet(builder func(interface{}) common.Set) {
-	for key := range p.symMap {
-		builder(symbol(key))
+	for _, nonTerm := range p.nonTerms {
+		builder(symbol(nonTerm))
 	}
 }
 
@@ -189,33 +190,36 @@ func (p *parser) buildFollowSet() {
 	p.buildSet(p.followOf)
 }
 
+// E -> T X
+// T -> ( E ) | int Y
+// X -> + E | ε
+// Y -> * T | ε
+// follow(E) = follow(X)
+// ------------------------------
+// follow(E) = { $, ), follow(X) } = { $, ) }
+// follow(X) = { follow(E) } = { $, ) }
+// follow(T) = { follow(Y), first(X) } = { follow(Y), +, follow(X) } = { follow(Y), +, $, ) } = { +, $, ) }
+// follow(Y) = { follow(T) } = { +, $, ) }
+// follow(() = { first(E) } = { (, int }
+// follow()) = { follow(T) } = { +, $, ) }
+// follow(+) = { first(E) } = { (, int }
+// follow(*) = { first(T) } = { (, int }
+// follow(int) = { first(Y) } = { *, follow(Y) } = { *, +, $, ) }
 func (p *parser) followOf(sym interface{}) common.Set {
 	symStr := fmt.Sprintf("%v", sym)
 	if val, exists := p.followSet[symStr]; exists {
 		return val
 	}
 
-	if symStr == p.startSymbol {
+	if p.followSet[symStr] == nil {
+		p.followSet[symStr] = common.Set{}
+	}
+	if symStr == p.nonTerms[0] {
 		p.followSet[symStr].Add("$")
 	}
-	occurrences := findInMap(p.symMap, symStr)
+	occurrences := p.findOccurrences(symStr)
 	for _, val := range occurrences {
-		// E -> T X
-		// T -> ( E ) | int Y
-		// X -> + E | ε
-		// Y -> * T | ε
-		// follow(E) = follow(X)
-		// ------------------------------
-		// follow(E) = { $, ), follow(X) } = { $, ) }
-		// follow(X) = { follow(E) } = { $, ) }
-		// follow(T) = { follow(Y), first(X) } = { follow(Y), +, follow(X) } = { follow(Y), +, $, ) } = { +, $, ) }
-		// follow(Y) = { follow(T) } = { +, $, ) }
-		// follow(() = { first(E) } = { (, int }
-		// follow()) = { follow(T) } = { +, $, ) }
-		// follow(+) = { first(E) } = { (, int }
-		// follow(*) = { first(T) } = { (, int }
-		// follow(int) = { first(Y) } = { *, follow(Y) } = { *, +, $, ) }
-		if val.groupIndex == len(p.symMap[val.key][val.groupsIndex]) - 1 {
+		if val.groupIndex == len(p.symMap[val.key][val.groupsIndex])-1 {
 			p.followSet[symStr].AddSet(p.followOf(val.key))
 		} else {
 			currSym := p.symMap[val.key][val.groupsIndex][val.groupIndex+1]
@@ -226,9 +230,13 @@ func (p *parser) followOf(sym interface{}) common.Set {
 			case nonTerm:
 				firstOfSet := p.firstOf(currSymStr)
 				if firstOfSet.Exist("ε") {
-					p.followSet[symStr].AddSet(p.followOf(currSym))
+					p.followSet[symStr].AddSet(p.followOf(currSymStr))
 				}
-				p.followSet[symStr].AddSet(firstOfSet)
+				for _, val := range firstOfSet.Keys() {
+					if val != "ε" {
+						p.followSet[symStr].Add(val)
+					}
+				}
 			}
 		}
 	}
@@ -239,18 +247,17 @@ type symPosition struct {
 	key         string
 	groupsIndex int
 	groupIndex  int
-	val         string
 }
 
-func findInMap(symMap symbolMap, str string) []*symPosition {
+func (p *parser) findOccurrences(str string) []*symPosition {
 	arr := make([]*symPosition, 0)
-	for key, symGroups := range symMap {
-		for groupsIndex, symGroup := range symGroups {
+	for _, nonTerm := range p.nonTerms {
+		for groupsIndex, symGroup := range p.symMap[nonTerm] {
 			for groupIndex, sym := range symGroup {
 				symStr := fmt.Sprintf("%v", sym)
 				if symStr == str {
 					arr = append(arr, &symPosition{
-						key, groupsIndex, groupIndex, str,
+						nonTerm, groupsIndex, groupIndex,
 					})
 				}
 			}
@@ -286,17 +293,29 @@ func parse(input string) bool {
 // https://en.wikipedia.org/wiki/Left_recursion#Removing_all_left_recursion
 func main() {
 	p := New()
-	p.startSymbol = "E"
+	//p.initSymbols("E -> T X", nil)
+	//p.initSymbols("X -> + T X | ε", nil)
+	//p.initSymbols("T -> F Y", nil)
+	//p.initSymbols("Y -> * F Y | ε", nil)
+	//p.initSymbols("F -> a | ( E )", nil)
+	//p.buildFirstSet()
+	//fmt.Printf("E => %v\n", p.firstSet["E"].Keys())
+	//fmt.Printf("T => %v\n", p.firstSet["T"].Keys())
+	//fmt.Printf("F => %v\n", p.firstSet["F"].Keys())
+	//fmt.Printf("X => %v\n", p.firstSet["X"].Keys())
+	//fmt.Printf("T => %v\n", p.firstSet["Y"].Keys())
 	p.initSymbols("E -> T X", nil)
-	p.initSymbols("X -> + T X | ε", nil)
-	p.initSymbols("T -> F Y", nil)
-	p.initSymbols("Y -> * F Y | ε", nil)
-	p.initSymbols("F -> a | ( E )", nil)
+	p.initSymbols("T -> ( E ) | int Y", nil)
+	p.initSymbols("X -> + E | ε", nil)
+	p.initSymbols("Y -> * T E & | ε", nil)
+	p.buildFollowSet()
+	// E -> T X
+	// T -> ( E ) | int Y
+	// X -> + E | ε
+	// Y -> * T | ε
 
-	p.buildFirstSet()
-	fmt.Println(p.firstSet["E"].Keys())
-	fmt.Println(p.firstSet["T"].Keys())
-	fmt.Println(p.firstSet["F"].Keys())
-	fmt.Println(p.firstSet["X"].Keys())
-	fmt.Println(p.firstSet["Y"].Keys())
+	fmt.Printf("E => %v\n", p.followSet["E"].Keys())
+	fmt.Printf("X => %v\n", p.followSet["X"].Keys())
+	fmt.Printf("T => %v\n", p.followSet["T"].Keys())
+	fmt.Printf("Y => %v\n", p.followSet["Y"].Keys())
 }

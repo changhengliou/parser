@@ -44,6 +44,12 @@ func (s Set) Add(str string) {
 	s[str] = nil
 }
 
+func (s Set) Erase(str string) {
+	if s.Exist(str) {
+		delete(s, str)
+	}
+}
+
 func (s Set) Exist(str string) bool {
 	if _, exists := s[str]; exists {
 		return true
