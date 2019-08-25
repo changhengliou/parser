@@ -152,13 +152,13 @@ func (p *parser) buildFirstSet() {
 	p.buildSet(p.firstOf)
 }
 
-func (p *parser) buildSet(builder func(interface{}) common.Set) {
+func (p *parser) buildSet(builder func(interface{}, bool) common.Set) {
 	for _, nonTerm := range p.nonTerms {
-		builder(symbol(nonTerm))
+		builder(symbol(nonTerm), false)
 	}
 }
 
-func (p *parser) firstOf(sym interface{}) common.Set {
+func (p *parser) firstOf(sym interface{}, n bool) common.Set {
 	symStr := fmt.Sprintf("%v", sym)
 	// already in the set
 	if val, exists := p.firstSet[symStr]; exists {
@@ -173,7 +173,7 @@ func (p *parser) firstOf(sym interface{}) common.Set {
 		case term:
 			currSet.Add(v.str())
 		case nonTerm:
-			currSet.AddSet(p.firstOf(v))
+			currSet.AddSet(p.firstOf(v, n))
 		}
 		p.firstSet[symStr] = currSet
 	}
@@ -205,9 +205,9 @@ func (p *parser) buildFollowSet() {
 // follow(+) = { first(E) } = { (, int }
 // follow(*) = { first(T) } = { (, int }
 // follow(int) = { first(Y) } = { *, follow(Y) } = { *, +, $, ) }
-func (p *parser) followOf(sym interface{}) common.Set {
+func (p *parser) followOf(sym interface{}, useCache bool) common.Set {
 	symStr := fmt.Sprintf("%v", sym)
-	if val, exists := p.followSet[symStr]; exists {
+	if val, exists := p.followSet[symStr]; useCache && exists {
 		return val
 	}
 
@@ -220,7 +220,7 @@ func (p *parser) followOf(sym interface{}) common.Set {
 	occurrences := p.findOccurrences(symStr)
 	for _, val := range occurrences {
 		if val.groupIndex == len(p.symMap[val.key][val.groupsIndex])-1 {
-			p.followSet[symStr].AddSet(p.followOf(val.key))
+			p.followSet[symStr].AddSet(p.followOf(val.key, true))
 		} else {
 			currSym := p.symMap[val.key][val.groupsIndex][val.groupIndex+1]
 			currSymStr := fmt.Sprintf("%v", currSym)
@@ -228,9 +228,9 @@ func (p *parser) followOf(sym interface{}) common.Set {
 			case term:
 				p.followSet[symStr].Add(currSymStr)
 			case nonTerm:
-				firstOfSet := p.firstOf(currSymStr)
+				firstOfSet := p.firstOf(currSymStr, useCache)
 				if firstOfSet.Exist("ε") {
-					p.followSet[symStr].AddSet(p.followOf(currSymStr))
+					p.followSet[symStr].AddSet(p.followOf(currSymStr, true))
 				}
 				for _, val := range firstOfSet.Keys() {
 					if val != "ε" {
