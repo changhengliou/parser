@@ -1,7 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <stack>
 #include <string.h>
+#include <string>
 #include <unistd.h>
+
+using namespace std;
 
 /*
  * Convert infix regexp re to postfix notation.
@@ -22,7 +27,7 @@ char *re2post(char *re) {
   nalt = 0;
   natom = 0;
   if (strlen(re) >= sizeof buf / 2)
-    return NULL;
+    return nullptr;
   for (; *re; re++) {
     switch (*re) {
     case '(':
@@ -31,7 +36,7 @@ char *re2post(char *re) {
         *dst++ = '.';
       }
       if (p >= paren + 100)
-        return NULL;
+        return nullptr;
       p->nalt = nalt;
       p->natom = natom;
       p++;
@@ -40,16 +45,16 @@ char *re2post(char *re) {
       break;
     case '|':
       if (natom == 0)
-        return NULL;
+        return nullptr;
       while (--natom > 0)
         *dst++ = '.';
       nalt++;
       break;
     case ')':
       if (p == paren)
-        return NULL;
+        return nullptr;
       if (natom == 0)
-        return NULL;
+        return nullptr;
       while (--natom > 0)
         *dst++ = '.';
       for (; nalt > 0; nalt--)
@@ -63,7 +68,7 @@ char *re2post(char *re) {
     case '+':
     case '?':
       if (natom == 0)
-        return NULL;
+        return nullptr;
       *dst++ = *re;
       break;
     default:
@@ -77,7 +82,7 @@ char *re2post(char *re) {
     }
   }
   if (p != paren)
-    return NULL;
+    return nullptr;
   while (--natom > 0)
     *dst++ = '.';
   for (; nalt > 0; nalt--)
@@ -89,51 +94,23 @@ char *re2post(char *re) {
 /*
  * Represents an NFA state plus zero or one or two arrows exiting.
  * if c == Match, no arrows out; matching state.
- * If c == Split, unlabeled arrows to out and out1 (if != NULL).
+ * If c == Split, unlabeled arrows to out and out1 (if != nullptr).
  * If c < 256, labeled arrow with character c to out.
  */
 enum { Match = 256, Split = 257 };
-typedef struct State State;
+int nstate;
 struct State {
   int c;
   State *out;
   State *out1;
   int lastlist;
+  State(int c) : c(c) {}
+  State(int c, State *out, State *out1) : c(c), out(out), out1(out1) {
+    nstate++;
+  }
 };
-State matchstate = {Match}; /* matching state */
-int nstate;
-
-/* Allocate and initialize State */
-State *state(int c, State *out, State *out1) {
-  State *s;
-
-  nstate++;
-  s = (State *)malloc(sizeof *s);
-  s->lastlist = 0;
-  s->c = c;
-  s->out = out;
-  s->out1 = out1;
-  return s;
-}
-
-/*
- * A partially built NFA without the matching state filled in.
- * Frag.start points at the start state.
- * Frag.out is a list of places that need to be set to the
- * next state for this fragment.
- */
-typedef struct Frag Frag;
-typedef union Ptrlist Ptrlist;
-struct Frag {
-  State *start;
-  Ptrlist *out;
-};
-
-/* Initialize Frag struct. */
-Frag frag(State *start, Ptrlist *out) {
-  Frag n = {start, out};
-  return n;
-}
+/* matching state */
+State matchstate(Match);
 
 /*
  * Since the out pointers in the list are always
@@ -145,12 +122,25 @@ union Ptrlist {
   State *s;
 };
 
+/*
+ * A partially built NFA without the matching state filled in.
+ * NfaFrag.start points at the start state.
+ * NfaFrag.out is a list of places that need to be set to the
+ * next state for this fragment.
+ */
+struct Frag {
+  State *start;
+  Ptrlist *out;
+  Frag() {}
+  Frag(State *start, Ptrlist *out) : start(start), out(out) {}
+};
+
 /* Create singleton list containing just outp. */
-Ptrlist *list1(State **outp) {
+Ptrlist *newList(State **outp) {
   Ptrlist *l;
 
   l = (Ptrlist *)outp;
-  l->next = NULL;
+  l->next = nullptr;
   return l;
 }
 
@@ -179,69 +169,68 @@ Ptrlist *append(Ptrlist *l1, Ptrlist *l2) {
  * Convert postfix regular expression to NFA.
  * Return start state.
  */
-State *post2nfa(char *postfix) {
-  char *p;
-  Frag stack[1000], *stackp, e1, e2, e;
+State *post2nfa(string postfix) {
+  stack<Frag> fragSatck;
+  Frag e1, e2, e;
   State *s;
 
-  // fprintf(stderr, "postfix: %s\n", postfix);
+  if (postfix.empty())
+    return nullptr;
 
-  if (postfix == NULL)
-    return NULL;
-
-#define push(s) *stackp++ = s
-#define pop() *--stackp
-
-  stackp = stack;
-  for (p = postfix; *p; p++) {
-    switch (*p) {
+  for (char p : postfix) {
+    switch (p) {
     default:
-      s = state(*p, NULL, NULL);
-      push(frag(s, list1(&s->out)));
+      s = new State(p, nullptr, nullptr);
+      fragSatck.push(Frag(s, newList(&s->out)));
       break;
     case '.': /* catenate */
-      e2 = pop();
-      e1 = pop();
+      e2 = fragSatck.top();
+      fragSatck.pop();
+      e1 = fragSatck.top();
+      fragSatck.pop();
       patch(e1.out, e2.start);
-      push(frag(e1.start, e2.out));
+      fragSatck.push(Frag(e1.start, e2.out));
       break;
     case '|': /* alternate */
-      e2 = pop();
-      e1 = pop();
-      s = state(Split, e1.start, e2.start);
-      push(frag(s, append(e1.out, e2.out)));
+      e2 = fragSatck.top();
+      fragSatck.pop();
+      e1 = fragSatck.top();
+      fragSatck.pop();
+      s = new State(Split, e1.start, e2.start);
+      fragSatck.push(Frag(s, append(e1.out, e2.out)));
       break;
     case '?': /* zero or one */
-      e = pop();
-      s = state(Split, e.start, NULL);
-      push(frag(s, append(e.out, list1(&s->out1))));
+      e = fragSatck.top();
+      fragSatck.pop();
+      s = new State(Split, e.start, nullptr);
+      fragSatck.push(Frag(s, append(e.out, newList(&s->out1))));
       break;
     case '*': /* zero or more */
-      e = pop();
-      s = state(Split, e.start, NULL);
+      e = fragSatck.top();
+      fragSatck.pop();
+      s = new State(Split, e.start, nullptr);
       patch(e.out, s);
-      push(frag(s, list1(&s->out1)));
+      fragSatck.push(Frag(s, newList(&s->out1)));
       break;
     case '+': /* one or more */
-      e = pop();
-      s = state(Split, e.start, NULL);
+      e = fragSatck.top();
+      fragSatck.pop();
+      s = new State(Split, e.start, nullptr);
       patch(e.out, s);
-      push(frag(e.start, list1(&s->out1)));
+      fragSatck.push(Frag(e.start, newList(&s->out1)));
       break;
     }
   }
 
-  e = pop();
-  if (stackp != stack)
-    return NULL;
+  e = fragSatck.top();
+  fragSatck.pop();
+  if (!fragSatck.empty())
+    return nullptr;
 
   patch(e.out, &matchstate);
   return e.start;
-#undef pop
-#undef push
 }
 
-typedef struct List List;
 struct List {
   State **s;
   int n;
@@ -272,7 +261,7 @@ int ismatch(List *l) {
 
 /* Add s to l, following unlabeled arrows. */
 void addstate(List *l, State *s) {
-  if (s == NULL || s->lastlist == listid)
+  if (s == nullptr || s->lastlist == listid)
     return;
   s->lastlist = listid;
   if (s->c == Split) {
@@ -327,7 +316,7 @@ int main(int argc, char **argv) {
 
   post = re2post((char *)regex);
   start = post2nfa(post);
-  if (start == NULL) {
+  if (start == nullptr) {
     fprintf(stderr, "error in post2nfa %s\n", post);
     return 1;
   }
