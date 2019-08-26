@@ -108,7 +108,7 @@ State *state(int c, State *out, State *out1) {
   State *s;
 
   nstate++;
-  s = malloc(sizeof *s);
+  s = (State *)malloc(sizeof *s);
   s->lastlist = 0;
   s->c = c;
   s->out = out;
@@ -304,7 +304,7 @@ void step(List *clist, int c, List *nlist) {
 
 /* Run NFA to determine whether it matches s. */
 int match(State *start, char *s) {
-  int i, c;
+  int c;
   List *clist, *nlist, *t;
 
   clist = startlist(start, &l1);
@@ -323,26 +323,17 @@ int main(int argc, char **argv) {
   int i;
   char *post;
   State *start;
+  const char *regex = "a(bb)+a";
 
-  if (argc < 3) {
-    fprintf(stderr, "usage: nfa regexp string...\n");
-    return 1;
-  }
-
-  post = re2post(argv[1]);
-  if (post == NULL) {
-    fprintf(stderr, "bad regexp %s\n", argv[1]);
-    return 1;
-  }
-
+  post = re2post((char *)regex);
   start = post2nfa(post);
   if (start == NULL) {
     fprintf(stderr, "error in post2nfa %s\n", post);
     return 1;
   }
 
-  l1.s = malloc(nstate * sizeof l1.s[0]);
-  l2.s = malloc(nstate * sizeof l2.s[0]);
+  l1.s = (State **)malloc(nstate * sizeof l1.s[0]);
+  l2.s = (State **)malloc(nstate * sizeof l2.s[0]);
   for (i = 2; i < argc; i++)
     if (match(start, argv[i]))
       printf("%s\n", argv[i]);
