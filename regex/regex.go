@@ -17,8 +17,8 @@ import (
 // A deterministic finite automaton (DFA), because in any input, each possible input letter leads to at most one new input
 
 type NfaFrag struct {
-	state *NfaState
-	next  []*NfaState
+	in   *NfaState
+	outs []*NfaState
 }
 
 type NfaState struct {
@@ -50,10 +50,12 @@ func (s *stack) isEmpty() bool {
 }
 
 const (
-	SPLIT = 255
+	EMPTY = -1
+	SPLIT = -2
+	MATCH = -3
 )
 
-func toNfa(input []rune) {
+func toNfa(input []rune) *NfaState {
 	var (
 		fragStack = stack{}
 	)
@@ -63,66 +65,80 @@ func toNfa(input []rune) {
 			e2 := fragStack.pop().(*NfaFrag)
 			e1 := fragStack.pop().(*NfaFrag)
 			fragStack.push(&NfaFrag{
-				state: &NfaState{
+				in: &NfaState{
 					val:   SPLIT,
-					next:  e1.state,
-					next2: e2.state,
+					next:  e1.in,
+					next2: e2.in,
 				},
-				next: append(e1.next, e2.next...),
+				outs: append(e1.outs, e2.outs...),
 			})
 		case CONCAT:
 			e2 := fragStack.pop().(*NfaFrag)
 			e1 := fragStack.pop().(*NfaFrag)
-			for i := range e1.next {
-				e1.next[i] = e2.state
+			outs := e2.outs
+			for i := range e1.outs {
+				if e1.outs[i].val == EMPTY {
+					*(e1.outs[i]) = *(e2.in)
+					outs = e1.outs
+				} else {
+					e1.outs[i].next = e2.in
+				}
 			}
 			fragStack.push(&NfaFrag{
-				state: &NfaState{
-					val:   e1.state.val,
-					next:  e2.state,
-					next2: nil,
-				},
-				next: e2.next,
+				in:   e1.in,
+				outs: outs,
 			})
 		case KLEENE:
 			e := fragStack.pop().(*NfaFrag)
 			state := &NfaState{
-				val:  SPLIT,
-				next: e.state,
+				val:   SPLIT,
+				next:  e.in,
+				next2: &NfaState{val: EMPTY},
 			}
-			for i := range e.next {
-				e.next[i] = state
+			for i := range e.outs {
+				e.outs[i].next = state
 			}
 			fragStack.push(&NfaFrag{
-				state: state,
-				next:  append(e.next, state),
+				in:   state,
+				outs: []*NfaState{state.next2},
 			})
 		case '?':
 			e := fragStack.pop().(*NfaFrag)
 			fragStack.push(&NfaFrag{
-				state: &NfaState{
+				in: &NfaState{
 					val:  SPLIT,
-					next: e.state,
+					next: e.in,
 				},
-				next: e.next,
+				outs: e.outs,
 			})
 		case '+':
 			e := fragStack.pop().(*NfaFrag)
 			fragStack.push(&NfaFrag{
-				state: &NfaState{
+				in: &NfaState{
 					val:  SPLIT,
-					next: e.state,
+					next: e.in,
 				},
-				next: e.next,
+				outs: e.outs,
 			})
 		default:
 			state := &NfaState{val: c}
 			fragStack.push(&NfaFrag{
-				state: state,
-				next:  []*NfaState{state},
+				in:   state,
+				outs: []*NfaState{state},
 			})
 		}
 	}
+	e := fragStack.pop().(*NfaFrag)
+	if !fragStack.isEmpty() {
+		panic("Invalid syntax")
+	}
+	matchState := &NfaState{
+		val: MATCH,
+	}
+	for i := range e.outs {
+		e.outs[i].next = matchState
+	}
+	return e.in
 }
 
 // 1. Collation-related bracket symbols [==] [::] [..]
@@ -268,7 +284,7 @@ func shuntingYard(input string) string {
 func main() {
 	fmt.Println(infixToPostfix(parse("(ab)*c")))    // "ab.c*"
 	fmt.Println(infixToPostfix(parse("(a(b|d))*"))) // "abd|.*"
-	fmt.Println(infixToPostfix(parse("a(bb)+c")))   // "abb..c.+"
+	fmt.Println(infixToPostfix(parse("(a(b|d))*")))   // "abb..c.+"
 	s := infixToPostfix(parse("(ab)*c"))
 	toNfa(s)
 }
