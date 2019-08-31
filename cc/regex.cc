@@ -101,11 +101,11 @@ enum { Match = 256, Split = 257 };
 int nstate;
 struct State {
   int c;
-  State *out;
-  State *out1;
+  State *next;
+  State *next2;
   int lastlist;
   State(int c) : c(c) {}
-  State(int c, State *out, State *out1) : c(c), out(out), out1(out1) {
+  State(int c, State *next, State *next2) : c(c), next(next), next2(next2) {
     nstate++;
   }
 };
@@ -119,7 +119,7 @@ State matchstate(Match);
  */
 union Ptrlist {
   Ptrlist *next;
-  State *s;
+  State *state;
 };
 
 /*
@@ -130,39 +130,40 @@ union Ptrlist {
  */
 struct Frag {
   State *start;
-  Ptrlist *out;
+  Ptrlist *next;
   Frag() {}
-  Frag(State *start, Ptrlist *out) : start(start), out(out) {}
+  Frag(State *start, Ptrlist *next) : start(start), next(next) {}
 };
 
 /* Create singleton list containing just outp. */
 Ptrlist *newList(State **outp) {
-  Ptrlist *l;
+  Ptrlist *list;
 
-  l = (Ptrlist *)outp;
-  l->next = nullptr;
-  return l;
+  list = (Ptrlist *)outp;
+  list->next = nullptr;
+  return list;
 }
 
 /* Patch the list of states at out to point to start. */
-void patch(Ptrlist *l, State *s) {
+void patch(Ptrlist *list, State *state) {
   Ptrlist *next;
 
-  for (; l; l = next) {
-    next = l->next;
-    l->s = s;
+  for (; list; list = next) {
+    next = list->next;
+    list->state = state;
   }
 }
 
 /* Join the two lists l1 and l2, returning the combination. */
-Ptrlist *append(Ptrlist *l1, Ptrlist *l2) {
-  Ptrlist *oldl1;
+Ptrlist *append(Ptrlist *list, Ptrlist *list2) {
+  Ptrlist *head;
 
-  oldl1 = l1;
-  while (l1->next)
-    l1 = l1->next;
-  l1->next = l2;
-  return oldl1;
+  head = list;
+  while (list->next != nullptr) {
+    list = list->next;
+  }
+  list->next = list2;
+  return head;
 }
 
 /*
@@ -172,7 +173,7 @@ Ptrlist *append(Ptrlist *l1, Ptrlist *l2) {
 State *post2nfa(string postfix) {
   stack<Frag> fragSatck;
   Frag e1, e2, e;
-  State *s;
+  State *state;
 
   if (postfix.empty())
     return nullptr;
@@ -180,54 +181,55 @@ State *post2nfa(string postfix) {
   for (char p : postfix) {
     switch (p) {
     default:
-      s = new State(p, nullptr, nullptr);
-      fragSatck.push(Frag(s, newList(&s->out)));
+      state = new State(p, nullptr, nullptr);
+      fragSatck.push(Frag(state, newList(&state->next)));
       break;
     case '.': /* catenate */
       e2 = fragSatck.top();
       fragSatck.pop();
       e1 = fragSatck.top();
       fragSatck.pop();
-      patch(e1.out, e2.start);
-      fragSatck.push(Frag(e1.start, e2.out));
+      patch(e1.next, e2.start);
+      fragSatck.push(Frag(e1.start, e2.next));
       break;
     case '|': /* alternate */
       e2 = fragSatck.top();
       fragSatck.pop();
       e1 = fragSatck.top();
       fragSatck.pop();
-      s = new State(Split, e1.start, e2.start);
-      fragSatck.push(Frag(s, append(e1.out, e2.out)));
+      state = new State(Split, e1.start, e2.start);
+      fragSatck.push(Frag(state, append(e1.next, e2.next)));
       break;
     case '?': /* zero or one */
       e = fragSatck.top();
       fragSatck.pop();
-      s = new State(Split, e.start, nullptr);
-      fragSatck.push(Frag(s, append(e.out, newList(&s->out1))));
+      state = new State(Split, e.start, nullptr);
+      fragSatck.push(Frag(state, append(e.next, newList(&state->next2))));
       break;
     case '*': /* zero or more */
       e = fragSatck.top();
       fragSatck.pop();
-      s = new State(Split, e.start, nullptr);
-      patch(e.out, s);
-      fragSatck.push(Frag(s, newList(&s->out1)));
+      state = new State(Split, e.start, nullptr);
+      patch(e.next, state);
+      fragSatck.push(Frag(state, newList(&state->next2)));
       break;
     case '+': /* one or more */
       e = fragSatck.top();
       fragSatck.pop();
-      s = new State(Split, e.start, nullptr);
-      patch(e.out, s);
-      fragSatck.push(Frag(e.start, newList(&s->out1)));
+      state = new State(Split, e.start, nullptr);
+      patch(e.next, state);
+      fragSatck.push(Frag(e.start, newList(&state->next2)));
       break;
     }
   }
 
   e = fragSatck.top();
   fragSatck.pop();
-  if (!fragSatck.empty())
+  if (!fragSatck.empty()) {
     return nullptr;
+  }
 
-  patch(e.out, &matchstate);
+  patch(e.next, &matchstate);
   return e.start;
 }
 
@@ -266,8 +268,8 @@ void addstate(List *l, State *s) {
   s->lastlist = listid;
   if (s->c == Split) {
     /* follow unlabeled arrows */
-    addstate(l, s->out);
-    addstate(l, s->out1);
+    addstate(l, s->next);
+    addstate(l, s->next2);
     return;
   }
   l->s[l->n++] = s;
@@ -287,7 +289,7 @@ void step(List *clist, int c, List *nlist) {
   for (i = 0; i < clist->n; i++) {
     s = clist->s[i];
     if (s->c == c)
-      addstate(nlist, s->out);
+      addstate(nlist, s->next);
   }
 }
 
@@ -312,7 +314,7 @@ int main(int argc, char **argv) {
   int i;
   char *post;
   State *start;
-  const char *regex = "a(bb)+a";
+  const char *regex = "(ab)*c";
 
   post = re2post((char *)regex);
   start = post2nfa(post);

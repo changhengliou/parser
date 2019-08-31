@@ -17,11 +17,12 @@ import (
 // A deterministic finite automaton (DFA), because in any input, each possible input letter leads to at most one new input
 
 type NfaFrag struct {
-	input *NfaState
-	next  *NfaState
+	state *NfaState
+	next  []*NfaState
 }
+
 type NfaState struct {
-	state rune
+	val   rune
 	next  *NfaState
 	next2 *NfaState
 }
@@ -48,6 +49,10 @@ func (s *stack) isEmpty() bool {
 	return len(s.val) == 0
 }
 
+const (
+	SPLIT = 255
+)
+
 func toNfa(input []rune) {
 	var (
 		fragStack = stack{}
@@ -58,25 +63,63 @@ func toNfa(input []rune) {
 			e2 := fragStack.pop().(*NfaFrag)
 			e1 := fragStack.pop().(*NfaFrag)
 			fragStack.push(&NfaFrag{
-				input: &NfaState{
-					state: -1,
-					next:  e1.next,
-					next2: e2.next,
+				state: &NfaState{
+					val:   SPLIT,
+					next:  e1.state,
+					next2: e2.state,
 				},
-				next:  ,
+				next: append(e1.next, e2.next...),
 			})
 		case CONCAT:
-		case KLEENE:
-		case '?':
-		case '+':
-		default:
+			e2 := fragStack.pop().(*NfaFrag)
+			e1 := fragStack.pop().(*NfaFrag)
+			for i := range e1.next {
+				e1.next[i] = e2.state
+			}
 			fragStack.push(&NfaFrag{
-				input: &NfaState{
-					state: c,
-					next:  nil,
+				state: &NfaState{
+					val:   e1.state.val,
+					next:  e2.state,
 					next2: nil,
 				},
-				next: nil,
+				next: e2.next,
+			})
+		case KLEENE:
+			e := fragStack.pop().(*NfaFrag)
+			state := &NfaState{
+				val:  SPLIT,
+				next: e.state,
+			}
+			for i := range e.next {
+				e.next[i] = state
+			}
+			fragStack.push(&NfaFrag{
+				state: state,
+				next:  append(e.next, state),
+			})
+		case '?':
+			e := fragStack.pop().(*NfaFrag)
+			fragStack.push(&NfaFrag{
+				state: &NfaState{
+					val:  SPLIT,
+					next: e.state,
+				},
+				next: e.next,
+			})
+		case '+':
+			e := fragStack.pop().(*NfaFrag)
+			fragStack.push(&NfaFrag{
+				state: &NfaState{
+					val:  SPLIT,
+					next: e.state,
+				},
+				next: e.next,
+			})
+		default:
+			state := &NfaState{val: c}
+			fragStack.push(&NfaFrag{
+				state: state,
+				next:  []*NfaState{state},
 			})
 		}
 	}
@@ -226,4 +269,6 @@ func main() {
 	fmt.Println(infixToPostfix(parse("(ab)*c")))    // "ab.c*"
 	fmt.Println(infixToPostfix(parse("(a(b|d))*"))) // "abd|.*"
 	fmt.Println(infixToPostfix(parse("a(bb)+c")))   // "abb..c.+"
+	s := infixToPostfix(parse("(ab)*c"))
+	toNfa(s)
 }
